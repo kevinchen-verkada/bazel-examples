@@ -1,11 +1,22 @@
+load("@aspect_rules_esbuild//esbuild:defs.bzl", "esbuild")
 load("@aspect_rules_ts//ts:defs.bzl", "ts_project")
 load("@jest//:defs.bzl", "jest_test")
+
+esbuild(
+    name = "app_bundle",
+    define = {"process.env.NODE_ENV": '"production"'},
+    entry_points = ["a.ts"],
+    metafile = False,
+    minify = True,
+    deps = [":src_ts"],
+)
 
 ts_project(
     name = "src_ts",
     srcs = [
         "CheckboxWithLabel.tsx",
         "a.ts",
+        "a.css",
     ],
     declaration = True,
     tsconfig = "//:tsconfig",

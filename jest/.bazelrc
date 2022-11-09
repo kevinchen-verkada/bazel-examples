@@ -1,1 +1,21 @@
+build --bes_results_url=https://app.buildbuddy.io/invocation/
+build --remote_header=x-buildbuddy-platform.container-registry-username=AWS
+build --remote_header=x-buildbuddy-platform.container-registry-password={redacted}
+build --bes_backend=grpcs://remote.buildbuddy.io
+build --remote_header=x-buildbuddy-api-key={redacted}
+build --remote_cache=grpcs://remote.buildbuddy.io
+# To fix a remote execution issue with rules_js, see https://github.com/bazelbuild/bazel/issues/10298
+build --experimental_allow_unresolved_symlinks
+build --strategy=TsProject=worker
+
+# Remote execution
+build:remote --remote_timeout=3600
+build:remote --remote_executor=grpcs://remote.buildbuddy.io
+build:remote --jobs=50
+build:remote --host_platform=//:docker_image_platform
+build:remote --extra_execution_platforms=//:docker_image_platform
+build:remote --platforms=//:docker_image_platform
+build:remote --action_env=BAZEL_DO_NOT_DETECT_CPP_TOOLCHAIN=1
+build:remote --incompatible_strict_action_env=true
+
 test --test_output=errors

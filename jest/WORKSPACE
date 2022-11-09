@@ -22,6 +22,13 @@ http_archive(
 )
 
 http_archive(
+    name = "aspect_rules_esbuild",
+    sha256 = "dccab34d457faf9968ec83e2900d65cf5b846f036822b675d988deee0113dba9",
+    strip_prefix = "rules_esbuild-0.13.1",
+    url = "https://github.com/aspect-build/rules_esbuild/archive/refs/tags/v0.13.1.tar.gz",
+)
+
+http_archive(
     name = "aspect_rules_jest",
     sha256 = "6d6303372879579cff3c615d0f53ec1cea8a919ed457ffcd375ef5ac2aaaa0b4",
     strip_prefix = "rules_jest-0.11.1",
@@ -35,6 +42,18 @@ rules_js_dependencies()
 load("@aspect_rules_ts//ts:repositories.bzl", "rules_ts_dependencies", LATEST_TS_VERSION = "LATEST_VERSION")
 
 rules_ts_dependencies(ts_version = LATEST_TS_VERSION)
+
+load("@aspect_rules_esbuild//esbuild:dependencies.bzl", "rules_esbuild_dependencies")
+
+rules_esbuild_dependencies()
+
+# Register a toolchain containing esbuild npm package and native bindings
+load("@aspect_rules_esbuild//esbuild:repositories.bzl", "esbuild_register_toolchains", esbuild_latest_version = "LATEST_VERSION")
+
+esbuild_register_toolchains(
+    name = "esbuild",
+    esbuild_version = esbuild_latest_version,
+)
 
 load("@aspect_rules_jest//jest:dependencies.bzl", "rules_jest_dependencies")
 
